@@ -1,0 +1,50 @@
+<app-hero-detail *ngIf="showDetails(); else emptyDetails" [hero]="selectedHero"></app-hero-detail>
+
+<div *ngIf="heroes.length; else emptyList">
+    <h2>My heroes</h2>
+    <ul class="heroes">
+      <li
+        *ngFor="let hero of heroes"
+        (click)="onSelect(hero)"
+        [class.selected]="hero === selectedHero"
+      >
+        <span class="badge">{{ hero.id }}</span>
+        {{ hero.name }}
+      </li>
+    </ul>
+  
+    <div>
+      <label>
+        <input placeholder="Name" [(ngModel)]="selectedHero.name">
+      </label>
+    </div>
+  </div>
+  
+  <div>
+    <h2>Add hero</h2>
+    <input (ngModelChange)="resetError()" placeholder="New name" [(ngModel)]="newHeroName">
+    <button (click)="onAdd()">Add {{ newHeroName }}</button>
+    <p *ngIf="hasError" class="error">Hero name must be longer than 2 and shorter than 13 characters.</p>
+  </div>
+  
+  <div>
+    <h2>Delete hero(s)</h2>
+    <div *ngIf="deleteDialogOpen; else deleteButtons">
+      <p>Are you sure you want to delete all heroes?</p>
+      <button (click)="onDeleteAll()">Yes, delete all!</button>
+      <button (click)="toggleDeleteDialog(false)">No, just kidding</button>
+    </div>
+  </div>
+  
+  <ng-template #emptyList>
+    <p>Heroes list is empty, please add some.</p>
+  </ng-template>
+  
+  <ng-template #emptyDetails>
+    <p>No hero details to show.</p>
+  </ng-template>
+  
+  <ng-template #deleteButtons>
+    <button [disabled]="!heroes.length" (click)="toggleDeleteDialog(true)">Delete all heroes</button>
+    <button [disabled]="!showDetails()" (click)="onDeleteSelectedHero()">Delete selected hero</button>
+  </ng-template>
